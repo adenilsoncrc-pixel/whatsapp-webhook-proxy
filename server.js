@@ -4,14 +4,7 @@ const VERIFY_TOKEN = "adr_contabil_webhook_2026";
 const WA_TOKEN = "EAAXaiCKHRJwBRFZBBDer4k0hrgC6EbHKVS1MHQKSMRSOJloDLSqbVCWxx8zjhHT9Gq87m7nca24kKj3mNFAi831OsagZBvCBAZBrsy73ZCfNlca4ozjXJMDkbJnZAeBHZA9O78107z7RxBwZAjY1oH17NptG3oaSjvsBJbtup379MHv4CSHIU8pcf28GZBdZAqwZDZD";
 const PHONE_ID = "1067629079762673";
 const PORT = process.env.PORT || 3000;
-const MENU = "Ola! Bem-vindo a A.D.R. Contabilidade.
-1-Advocacia
-2-Contabilidade
-3-Pericia
-4-IRPF
-5-Certidoes
-6-Agendamento
-7-Atendente";
+var MENU = ["Ola! Bem-vindo a A.D.R. Contabilidade.","1-Advocacia","2-Contabilidade","3-Pericia","4-IRPF","5-Certidoes","6-Agendamento","7-Atendente"].join(String.fromCharCode(10));
 function send(to, txt) {
 var b = JSON.stringify({messaging_product:"whatsapp",to:to,type:"text",text:{body:txt}});
 var o = {hostname:"graph.facebook.com",path:"/v21.0/"+PHONE_ID+"/messages",method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+WA_TOKEN,"Content-Length":Buffer.byteLength(b)}};
