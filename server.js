@@ -3,6 +3,7 @@ var https = require("https");
 var VT = "adr_contabil_webhook_2026";
 var TK = "EAAXaiCKHRJwBRFZBBDer4k0hrgC6EbHKVS1MHQKSMRSOJloDLSqbVCWxx8zjhHT9Gq87m7nca24kKj3mNFAi831OsagZBvCBAZBrsy73ZCfNlca4ozjXJMDkbJnZAeBHZA9O78107z7RxBwZAjY1oH17NptG3oaSjvsBJbtup379MHv4CSHIU8pcf28GZBdZAqwZDZD";
 var PH = "1067629079762673";
+var MY = "5537988075561";
 var PT = process.env.PORT || 3000;
 var N = String.fromCharCode(10);
 var MENU = ["Ola! Bem-vindo a *A.D.R. Contabilidade e Pericias Contabeis*.","","Sou *ADENILSON DIAS RIBEIRO*:","Advocacia OAB/MG 218018","Contabilidade CRC/MG 111185","Pericia Judicial","","Escolha uma opcao:","","1 Advocacia","2 Contabilidade","3 Pericia","4 IRPF","5 Certidoes","6 Agendamento","7 Atendente"].join(N);
@@ -21,6 +22,10 @@ var r = https.request(o, function(){});
 r.on("error", function(){});
 r.write(b);
 r.end();
+}
+function notify(from, name, txt) {
+var msg = ["*Nova mensagem recebida*","","De: +"+from,"Nome: "+(name||"Desconhecido"),"Mensagem: "+txt].join(N);
+send(MY, msg);
 }
 function reply(txt) {
 var t = txt.trim().toLowerCase();
@@ -45,7 +50,7 @@ var body="";
 req.on("data",function(c){body+=c;});
 req.on("end",function(){
 res.writeHead(200);res.end("OK");
-try{var d=JSON.parse(body);if(!d.entry)return;d.entry.forEach(function(e){if(!e.changes)return;e.changes.forEach(function(c){if(!c.value||!c.value.messages)return;c.value.messages.forEach(function(m){if(m.type==="text"){send(m.from,reply(m.text.body))}});});});}catch(e){}
+try{var d=JSON.parse(body);if(!d.entry)return;d.entry.forEach(function(e){if(!e.changes)return;e.changes.forEach(function(c){if(!c.value||!c.value.messages)return;var nm="";if(c.value.contacts&&c.value.contacts[0])nm=c.value.contacts[0].profile.name;c.value.messages.forEach(function(m){if(m.type==="text"){if(m.from!==MY){notify(m.from,nm,m.text.body)}send(m.from,reply(m.text.body))}});});});}catch(e){}
 });return;
 }
 res.writeHead(405);res.end();
